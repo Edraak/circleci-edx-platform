@@ -8,10 +8,8 @@ general:
     - "test_root/log"
 
 dependencies:
-  pre:
-    - sudo apt-get update; sudo apt-get install libxmlsec1
-
   override:
+    - sudo apt-get update; sudo apt-get install libxmlsec1
     - npm install
 
     - pip install setuptools

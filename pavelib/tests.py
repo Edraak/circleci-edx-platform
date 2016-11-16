@@ -82,18 +82,24 @@ def generate_nose_exclude_dir():
         all_apps = list_dirs(django_project_dir)
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
-        changed_apps_groups = split_seq(changed_apps, LMS_TEST_PART_COUNT)
-        wanted_changed_apps = changed_apps_groups[LMS_TEST_PART]
+        if django_project_dir == 'lms/djangoapps/':
+            changed_apps_groups = split_seq(changed_apps, LMS_TEST_PART_COUNT)
+            wanted_changed_apps = changed_apps_groups[LMS_TEST_PART]
 
-        nose_rules.extend([
-            '# Included: {}'.format(os.path.join(django_project_dir, app))
-            for app in wanted_changed_apps
-        ])
+            nose_rules.extend([
+                '# Included: {}'.format(os.path.join(django_project_dir, app))
+                for app in wanted_changed_apps
+            ])
 
-        nose_rules.extend([
-            get_test_dir(os.path.join(django_project_dir, app))
-            for app in changed_apps - set(wanted_changed_apps)
-        ])
+            nose_rules.extend([
+                get_test_dir(os.path.join(django_project_dir, app))
+                for app in changed_apps - set(wanted_changed_apps)
+            ])
+        else:
+            nose_rules.extend([
+                '# Included: {}'.format(os.path.join(django_project_dir, app))
+                for app in changed_apps
+            ])
 
         nose_rules.extend([
             get_test_dir(os.path.join(django_project_dir, app))

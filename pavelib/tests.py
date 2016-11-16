@@ -22,7 +22,8 @@ def generate_nose_exclude_dir():
     # TODO: Toggle this feature using env. variables
     # TODO: Move this function to utils
     # TODO: Allow to customize with env. variables
-    COMPARE_BASE = 'named-release/dogwood.rc3'
+    # This hash is for: `named-release/dogwood.rc3`
+    COMPARE_BASE = '87313a4e0f53bf0e9396bd6ab8da5732fa445b90'
 
     DJANGO_PROJECT_DIRS = (
         'cms/djangoapps/',

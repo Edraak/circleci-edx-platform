@@ -47,6 +47,7 @@ conf/locale/messages.mo
 ### Testing artifacts
 .testids/
 .noseids
+nose-exclude-dirs
 nosetests.xml
 .coverage
 .coverage.*

@@ -7,6 +7,7 @@ from paver.easy import sh, task, cmdopts, needs, call_task
 from pavelib.utils.test import suites
 from pavelib.utils.envs import Env
 from optparse import make_option
+from git import Repo
 
 try:
     from pygments.console import colorize
@@ -17,9 +18,59 @@ __test__ = False  # do not collect
 
 
 @task
+def generate_nose_exclude_dir():
+    # TODO: Toggle this feature using env. variables
+    # TODO: Move this function to utils
+    # TODO: Allow to customize with env. variables
+    COMPARE_BASE = 'named-release/dogwood.rc3'
+
+    DJANGO_PROJECT_DIRS = (
+        'cms/djangoapps/',
+        'common/djangoapps/',
+        'lms/djangoapps/',
+        'openedx/core/djangoapps/',
+    )
+
+
+    git_repo = Repo('.')
+
+    diff_files = git_repo.git.diff(COMPARE_BASE, '--name-only').split('\n')
+
+    def files_to_apps(django_project_dir, files):
+        apps = set()
+        for f in files:
+            if f.startswith(django_project_dir):
+                relative_path = f.replace(django_project_dir, '', 1)
+                app_name = os.path.split(relative_path)[0]
+                apps.add(app_name)
+
+        return apps
+
+    def list_dirs(parent_dir):
+        return set(
+            name for name in os.listdir(parent_dir)
+            if os.path.isdir(os.path.join(parent_dir, name))
+        )
+
+    exclude_dirs = []
+    for django_project_dir in DJANGO_PROJECT_DIRS:
+        changed_apps = files_to_apps(django_project_dir, diff_files)
+        all_apps = list_dirs(django_project_dir)
+        unchanged_apps = all_apps - changed_apps  # neat python set operations
+
+        exclude_dirs.extend([
+            os.path.join(django_project_dir, app)
+            for app in unchanged_apps
+        ])
+
+    with open('nose-exclude-dirs', 'w') as dirs_file:
+        dirs_file.write('\n'.join(exclude_dirs))
+
+@task
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
+    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("system=", "s", "System to act on"),
@@ -75,6 +126,7 @@ def test_system(options):
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
+    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("lib=", "l", "lib to test"),
@@ -124,6 +176,7 @@ def test_lib(options):
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
+    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("failed", "f", "Run only failed tests"),
@@ -156,6 +209,7 @@ def test_python(options):
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
+    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("suites", "s", "List of unit test suites to run. (js, lib, cms, lms)"),

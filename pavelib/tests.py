@@ -22,8 +22,8 @@ def generate_nose_exclude_dir():
     # TODO: Toggle this feature using env. variables
     # TODO: Move this function to utils
     # TODO: Allow to customize with env. variables
-    # This hash is for: `named-release/dogwood.rc3`
-    COMPARE_BASE = '87313a4e0f53bf0e9396bd6ab8da5732fa445b90'
+    # This hash is for: `named-release/dogwood.rc2`
+    COMPARE_BASE = '1ebb78c9fa44f0b96d1500890373f672bff3f569'
 
     DJANGO_PROJECT_DIRS = (
         'cms/djangoapps/',
@@ -31,7 +31,6 @@ def generate_nose_exclude_dir():
         'lms/djangoapps/',
         'openedx/core/djangoapps/',
     )
-
 
     git_repo = Repo('.')
 

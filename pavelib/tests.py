@@ -52,6 +52,14 @@ def generate_nose_exclude_dir():
             if os.path.isdir(os.path.join(parent_dir, name))
         )
 
+    def get_test_dir(app_dir):
+        tests_dir = os.path.join(app_dir, 'tests')
+        if os.path.exists(tests_dir):
+            return tests_dir
+
+        return app_dir  # Probably the app doesn't have tests
+
+
     exclude_dirs = []
     for django_project_dir in DJANGO_PROJECT_DIRS:
         changed_apps = files_to_apps(django_project_dir, diff_files)
@@ -59,7 +67,12 @@ def generate_nose_exclude_dir():
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
         exclude_dirs.extend([
-            os.path.join(django_project_dir, app)
+            '# Included: {}'.format(os.path.join(django_project_dir, app))
+            for app in changed_apps
+        ])
+
+        exclude_dirs.extend([
+            get_test_dir(os.path.join(django_project_dir, app))
             for app in unchanged_apps
         ])
 

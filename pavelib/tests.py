@@ -32,6 +32,9 @@ def generate_nose_exclude_dir():
         'openedx/core/djangoapps/',
     )
 
+    LMS_TEST_PART_COUNT = int(os.getenv('LMS_TEST_PART_COUNT', '1'))
+    LMS_TEST_PART = int(os.getenv('LMS_TEST_PART', 0))
+
     git_repo = Repo('.')
 
     diff_files = git_repo.git.diff(COMPARE_BASE, '--name-only').split('\n')
@@ -59,25 +62,46 @@ def generate_nose_exclude_dir():
 
         return app_dir  # Probably the app doesn't have tests
 
+    def split_seq(seq, num_pieces):
+        """
+        Splits a list into number of sub-lists.
+        """
+        start = 0
+        seq = list(seq)
+        parts = []
+        for i in xrange(num_pieces):
+            stop = start + len(seq[i::num_pieces])
+            parts.append(seq[start:stop])
+            start = stop
 
-    exclude_dirs = []
+        return parts
+
+    nose_rules = []
     for django_project_dir in DJANGO_PROJECT_DIRS:
         changed_apps = files_to_apps(django_project_dir, diff_files)
         all_apps = list_dirs(django_project_dir)
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
-        exclude_dirs.extend([
+        changed_apps_groups = split_seq(changed_apps, LMS_TEST_PART_COUNT)
+        wanted_changed_apps = changed_apps_groups[LMS_TEST_PART]
+
+        nose_rules.extend([
             '# Included: {}'.format(os.path.join(django_project_dir, app))
-            for app in changed_apps
+            for app in wanted_changed_apps
         ])
 
-        exclude_dirs.extend([
+        nose_rules.extend([
+            get_test_dir(os.path.join(django_project_dir, app))
+            for app in changed_apps - set(wanted_changed_apps)
+        ])
+
+        nose_rules.extend([
             get_test_dir(os.path.join(django_project_dir, app))
             for app in unchanged_apps
         ])
 
     with open('nose-exclude-dirs', 'w') as dirs_file:
-        dirs_file.write('\n'.join(exclude_dirs))
+        dirs_file.write('\n'.join(nose_rules))
 
 @task
 @needs(

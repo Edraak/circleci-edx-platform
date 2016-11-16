@@ -47,11 +47,20 @@ if [ "$CIRCLE_NODE_TOTAL" == "1" ] ; then
 else
     # Split up the tests to run in parallel on 3 containers
     case $CIRCLE_NODE_INDEX in
-        0)  # run all of the lms unit tests
+        0)  # run half of the lms unit tests
+            export LMS_TEST_PART_COUNT=2
+            export LMS_TEST_PART=0
             paver test_system -s lms --extra_args="--with-flaky" --cov_args="-p"
             ;;
 
-        1)  # run all of the cms/lib unit tests
+        1)  # run the other half the lms unit tests
+            export LMS_TEST_PART_COUNT=2
+            export LMS_TEST_PART=1
+            paver test_system -s lms --extra_args="--with-flaky" --cov_args="-p"
+            ;;
+
+
+        2)  # run all of the cms/lib unit tests
 
             # Edraak: lib is mostly going to succeed due to the minimal modifications we do,
             # therefore we keep it later on

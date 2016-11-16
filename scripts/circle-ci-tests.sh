@@ -51,11 +51,13 @@ else
             paver test_system -s lms --extra_args="--with-flaky" --cov_args="-p"
             ;;
 
-        1)  # run all of the cms unit tests
-            paver test_system -s cms --extra_args="--with-flaky" --cov_args="-p"
-            ;;
+        1)  # run all of the cms/lib unit tests
 
-        2)  # run the commonlib unit tests
+            # Edraak: lib is mostly going to succeed due to the minimal modifications we do,
+            # therefore we keep it later on
+            # Combining test_lib and test_cms because LMS takes much longer to run
+            # This way we can use only two containers.
+            paver test_system -s cms --extra_args="--with-flaky" --cov_args="-p"
             paver test_lib --extra_args="--with-flaky" --cov_args="-p"
             ;;
 

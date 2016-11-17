@@ -80,7 +80,7 @@ def generate_nose_exclude_dir():
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
         if django_project_dir == 'lms/djangoapps/' and lms_test_part != 'ALL':
-            part_a, part_b = split_seq(changed_apps, 40)
+            part_a, part_b = split_seq(changed_apps, 55)
             wanted_changed_apps = part_a if lms_test_part == 'A' else part_b
 
             nose_rules.extend([

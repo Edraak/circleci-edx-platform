@@ -17,64 +17,82 @@ except ImportError:
 __test__ = False  # do not collect
 
 
-@task
-def generate_nose_exclude_dir():
-    # TODO: Toggle this feature using env. variables
-    # TODO: Move this function to utils
-    # TODO: Allow to customize with env. variables
-    # This hash is for: `named-release/dogwood.rc2`
-    COMPARE_BASE = '1ebb78c9fa44f0b96d1500890373f672bff3f569'
+def files_to_apps(django_project_dir, files):
+    apps = set()
+    for f in files:
+        if f.startswith(django_project_dir):
+            relative_path = f.replace(django_project_dir, '', 1)
+            app_name = os.path.split(relative_path)[0]
+            apps.add(app_name)
 
-    DJANGO_PROJECT_DIRS = (
-        'cms/djangoapps/',
-        'common/djangoapps/',
-        'lms/djangoapps/',
-        'openedx/core/djangoapps/',
+    return apps
+
+
+def list_dirs(parent_dir):
+    return set(
+        name for name in os.listdir(parent_dir)
+        if os.path.isdir(os.path.join(parent_dir, name))
     )
+
+
+def get_test_dir(app_dir):
+    tests_dir = os.path.join(app_dir, 'tests')
+    if os.path.exists(tests_dir):
+        return tests_dir
+
+    return app_dir  # Probably the app doesn't have tests
+
+
+def split_seq(seq, percent):
+    """
+    Splits a list into two lists based on specific percent.
+
+    Call it:
+       >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
+    """
+
+    seq = sorted(seq)  # Make sure the result are always consistent
+    index = int(len(seq) * percent/100.0)
+    return seq[:index], seq[index:]
+
+
+@task
+def generate_nose_exclude_dir(system=None):
+    # TODO: Refactor this mess!
+    # TODO: Move this function to utils
+    # By default it's hash is for: `named-release/dogwood.rc2`
+    compare_base = os.getenv('EDXAPP_COMPARE_BASE', '1ebb78c9fa44f0b96d1500890373f672bff3f569')
+    nose_exclude_file_path = 'nose-exclude-dirs'
+
+    if not compare_base:
+        # Disable this feature
+        if os.path.exists(nose_exclude_file_path):
+            os.remove(nose_exclude_file_path)
+
+        return
+
+    django_project_dirs = [
+        'common/djangoapps/',
+    ]
+
+    if system:
+        django_project_dirs.append('openedx/core/djangoapps/')
+
+        if system == 'lms':
+            system.append('lms/djangoapps/')
+        elif system == 'cms':
+            system.append('cms/djangoapps/')
+        else:
+            raise RuntimeError('Unknown system "{}". Use either "lms" or "cms"'.format(system))
 
     lms_test_part = os.getenv('LMS_TEST_PART', 'ALL')
 
     git_repo = Repo('.')
 
-    diff_files = git_repo.git.diff(COMPARE_BASE, '--name-only').split('\n')
-
-    def files_to_apps(django_project_dir, files):
-        apps = set()
-        for f in files:
-            if f.startswith(django_project_dir):
-                relative_path = f.replace(django_project_dir, '', 1)
-                app_name = os.path.split(relative_path)[0]
-                apps.add(app_name)
-
-        return apps
-
-    def list_dirs(parent_dir):
-        return set(
-            name for name in os.listdir(parent_dir)
-            if os.path.isdir(os.path.join(parent_dir, name))
-        )
-
-    def get_test_dir(app_dir):
-        tests_dir = os.path.join(app_dir, 'tests')
-        if os.path.exists(tests_dir):
-            return tests_dir
-
-        return app_dir  # Probably the app doesn't have tests
-
-    def split_seq(seq, percent):
-        """
-        Splits a list into two lists based on specific percent.
-
-        Call it:
-           >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
-        """
-
-        seq = sorted(seq)  # Make sure the result are always consistent
-        index = int(len(seq) * percent/100.0)
-        return seq[:index], seq[index:]
+    diff_files = git_repo.git.diff(compare_base, '--name-only').split('\n')
 
     nose_rules = []
-    for django_project_dir in DJANGO_PROJECT_DIRS:
+    for django_project_dir in django_project_dirs:
         changed_apps = files_to_apps(django_project_dir, diff_files)
         all_apps = list_dirs(django_project_dir)
         unchanged_apps = all_apps - changed_apps  # neat python set operations
@@ -103,14 +121,14 @@ def generate_nose_exclude_dir():
             for app in unchanged_apps
         ])
 
-    with open('nose-exclude-dirs', 'w') as dirs_file:
+    with open(nose_exclude_file_path, 'w') as dirs_file:
         dirs_file.write('\n'.join(nose_rules))
+
 
 @task
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
-    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("system=", "s", "System to act on"),
@@ -150,6 +168,9 @@ def test_system(options):
         if system in ['common', 'openedx']:
             system = 'lms'
         opts['test_id'] = test_id
+
+    if system:
+        generate_nose_exclude_dir(system)
 
     if test_id or system:
         system_tests = [suites.SystemTestSuite(system, **opts)]
@@ -216,7 +237,6 @@ def test_lib(options):
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
-    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("failed", "f", "Run only failed tests"),
@@ -249,7 +269,6 @@ def test_python(options):
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',
-    'pavelib.tests.generate_nose_exclude_dir',
 )
 @cmdopts([
     ("suites", "s", "List of unit test suites to run. (js, lib, cms, lms)"),

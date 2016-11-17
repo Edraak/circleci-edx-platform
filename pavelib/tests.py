@@ -32,7 +32,7 @@ def generate_nose_exclude_dir():
         'openedx/core/djangoapps/',
     )
 
-    LMS_TEST_PART = os.environ['LMS_TEST_PART']  # Break if the variable doesn't exist
+    lms_test_part = os.getenv('LMS_TEST_PART', 'ALL')
 
     git_repo = Repo('.')
 
@@ -79,9 +79,9 @@ def generate_nose_exclude_dir():
         all_apps = list_dirs(django_project_dir)
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
-        if django_project_dir == 'lms/djangoapps/' and LMS_TEST_PART != 'ALL':
+        if django_project_dir == 'lms/djangoapps/' and lms_test_part != 'ALL':
             part_a, part_b = split_seq(changed_apps, 40)
-            wanted_changed_apps = part_a if LMS_TEST_PART == 'A' else part_b
+            wanted_changed_apps = part_a if lms_test_part == 'A' else part_b
 
             nose_rules.extend([
                 '# Included: {}'.format(os.path.join(django_project_dir, app))

@@ -69,7 +69,7 @@ def generate_nose_exclude_dir():
            >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
         """
 
-        seq = list(seq)
+        seq = sorted(seq)  # Make sure the result are always consistent
         index = int(len(seq) * percent/100.0)
         return seq[:index], seq[index:]
 

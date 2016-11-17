@@ -32,7 +32,7 @@ def generate_nose_exclude_dir():
         'openedx/core/djangoapps/',
     )
 
-    LMS_TEST_PART = os.getenv('LMS_TEST_PART')
+    LMS_TEST_PART = os.environ['LMS_TEST_PART']  # Break if the variable doesn't exist
 
     git_repo = Repo('.')
 

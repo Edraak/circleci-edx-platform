@@ -48,14 +48,12 @@ else
     # Split up the tests to run in parallel on 3 containers
     case $CIRCLE_NODE_INDEX in
         0)  # run half of the lms unit tests
-            export LMS_TEST_PART_COUNT=2
-            export LMS_TEST_PART=0
+            export LMS_TEST_PART='A'
             paver test_system -s lms --extra_args="--with-flaky" --cov_args="-p"
             ;;
 
         1)  # run the other half the lms unit tests
-            export LMS_TEST_PART_COUNT=2
-            export LMS_TEST_PART=1
+            export LMS_TEST_PART='B'
             paver test_system -s lms --extra_args="--with-flaky" --cov_args="-p"
             ;;
 

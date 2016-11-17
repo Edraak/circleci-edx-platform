@@ -32,8 +32,7 @@ def generate_nose_exclude_dir():
         'openedx/core/djangoapps/',
     )
 
-    LMS_TEST_PART_COUNT = int(os.getenv('LMS_TEST_PART_COUNT', '1'))
-    LMS_TEST_PART = int(os.getenv('LMS_TEST_PART', 0))
+    LMS_TEST_PART = os.getenv('LMS_TEST_PART')
 
     git_repo = Repo('.')
 
@@ -62,19 +61,17 @@ def generate_nose_exclude_dir():
 
         return app_dir  # Probably the app doesn't have tests
 
-    def split_seq(seq, num_pieces):
+    def split_seq(seq, percent):
         """
-        Splits a list into number of sub-lists.
-        """
-        start = 0
-        seq = list(seq)
-        parts = []
-        for i in xrange(num_pieces):
-            stop = start + len(seq[i::num_pieces])
-            parts.append(seq[start:stop])
-            start = stop
+        Splits a list into two lists based on specific percent.
 
-        return parts
+        Call it:
+           >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
+        """
+
+        seq = list(seq)
+        index = int(len(seq) * percent/100.0)
+        return seq[:index], seq[index:]
 
     nose_rules = []
     for django_project_dir in DJANGO_PROJECT_DIRS:
@@ -83,8 +80,8 @@ def generate_nose_exclude_dir():
         unchanged_apps = all_apps - changed_apps  # neat python set operations
 
         if django_project_dir == 'lms/djangoapps/':
-            changed_apps_groups = split_seq(changed_apps, LMS_TEST_PART_COUNT)
-            wanted_changed_apps = changed_apps_groups[LMS_TEST_PART]
+            part_a, part_b = split_seq(changed_apps, 60)
+            wanted_changed_apps = part_a if LMS_TEST_PART == 'A' else part_b
 
             nose_rules.extend([
                 '# Included: {}'.format(os.path.join(django_project_dir, app))

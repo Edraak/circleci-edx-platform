@@ -60,10 +60,20 @@ else
 
         2)  # run all of the cms/lib unit tests
 
-            set +e  # CMS might fail, but still we want to test_lib
+            set +e  # Allow to get the exit code
             paver test_system -s cms --extra_args="--with-flaky" --cov_args="-p"
-            set -e  # Fail the script if test_lib fails, back to the default behaviour.
+            CMS_EXIT_STATUS=$?
+
             paver test_lib --extra_args="--with-flaky" --cov_args="-p"
+            LIB_EXIT_STATUS=$?
+
+            set -e  # Done, back to strict mode.
+            if [ "$CMS_EXIT_STATUS" == "0" -a "$LIB_EXIT_STATUS" == "0" ]; then
+                echo Both CMS and Lib have passed tests.
+            else
+                echo "Failure in CMS and/or Lib tests."
+                exit 1
+            fi
             ;;
 
         *)

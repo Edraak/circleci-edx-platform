@@ -17,6 +17,45 @@ except ImportError:
 __test__ = False  # do not collect
 
 
+def files_to_apps(django_project_dir, files):
+    apps = set()
+    for f in files:
+        if f.startswith(django_project_dir):
+            relative_path = f.replace(django_project_dir, '', 1)
+            app_name = os.path.split(relative_path)[0]
+            apps.add(app_name)
+
+    return apps
+
+
+def list_dirs(parent_dir):
+    return set(
+        name for name in os.listdir(parent_dir)
+        if os.path.isdir(os.path.join(parent_dir, name))
+    )
+
+
+def get_test_dir(app_dir):
+    tests_dir = os.path.join(app_dir, 'tests')
+    if os.path.exists(tests_dir):
+        return tests_dir
+
+    return app_dir  # Probably the app doesn't have tests
+
+
+def split_seq(seq, percent):
+    """
+    Splits a list into two lists based on specific percent.
+
+    Call it:
+       >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
+    """
+
+    seq = sorted(seq)  # Make sure the result are always consistent
+    index = int(len(seq) * percent/100.0)
+    return seq[:index], seq[index:]
+
+
 @task
 def generate_nose_exclude_dir():
     # TODO: Toggle this feature using env. variables
@@ -37,41 +76,6 @@ def generate_nose_exclude_dir():
     git_repo = Repo('.')
 
     diff_files = git_repo.git.diff(COMPARE_BASE, '--name-only').split('\n')
-
-    def files_to_apps(django_project_dir, files):
-        apps = set()
-        for f in files:
-            if f.startswith(django_project_dir):
-                relative_path = f.replace(django_project_dir, '', 1)
-                app_name = os.path.split(relative_path)[0]
-                apps.add(app_name)
-
-        return apps
-
-    def list_dirs(parent_dir):
-        return set(
-            name for name in os.listdir(parent_dir)
-            if os.path.isdir(os.path.join(parent_dir, name))
-        )
-
-    def get_test_dir(app_dir):
-        tests_dir = os.path.join(app_dir, 'tests')
-        if os.path.exists(tests_dir):
-            return tests_dir
-
-        return app_dir  # Probably the app doesn't have tests
-
-    def split_seq(seq, percent):
-        """
-        Splits a list into two lists based on specific percent.
-
-        Call it:
-           >>> split_seq([1,2,3,4,5,6], 50) == [1,2,3],[4,5,6]
-        """
-
-        seq = sorted(seq)  # Make sure the result are always consistent
-        index = int(len(seq) * percent/100.0)
-        return seq[:index], seq[index:]
 
     nose_rules = []
     for django_project_dir in DJANGO_PROJECT_DIRS:

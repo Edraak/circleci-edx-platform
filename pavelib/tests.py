@@ -60,11 +60,10 @@ def split_seq(seq, percent):
 def generate_nose_exclude_dir():
     # TODO: Toggle this feature using env. variables
     # TODO: Move this function to utils
-    # TODO: Allow to customize with env. variables
-    # This hash is for: `named-release/dogwood.rc2`
-    COMPARE_BASE = '1ebb78c9fa44f0b96d1500890373f672bff3f569'
+    # By default the hash is for: `named-release/dogwood.rc2`
+    compare_base = os.getenv('EDXAPP_COMPARE_BASE', '1ebb78c9fa44f0b96d1500890373f672bff3f569')
 
-    DJANGO_PROJECT_DIRS = (
+    django_project_dirs = (
         'cms/djangoapps/',
         'common/djangoapps/',
         'lms/djangoapps/',
@@ -75,10 +74,10 @@ def generate_nose_exclude_dir():
 
     git_repo = Repo('.')
 
-    diff_files = git_repo.git.diff(COMPARE_BASE, '--name-only').split('\n')
+    diff_files = git_repo.git.diff(compare_base, '--name-only').split('\n')
 
     nose_rules = []
-    for django_project_dir in DJANGO_PROJECT_DIRS:
+    for django_project_dir in django_project_dirs:
         changed_apps = files_to_apps(django_project_dir, diff_files)
         all_apps = list_dirs(django_project_dir)
         unchanged_apps = all_apps - changed_apps  # neat python set operations

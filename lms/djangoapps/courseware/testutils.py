@@ -27,7 +27,8 @@ class RenderXBlockTestMixin(object):
     # but are excluded from the xBlock-only rendering.
     COURSEWARE_CHROME_HTML_ELEMENTS = [
         '<ol class="course-tabs"',
-        '<footer id="footer-openedx"',
+        # TODO: Edraak: Temporarily disabled till eucalyptus release, check `footer.html` for more info.
+        # '<footer id="footer-openedx"',
         '<div class="window-wrap"',
         '<div class="preview-menu"',
         '<div class="container"'

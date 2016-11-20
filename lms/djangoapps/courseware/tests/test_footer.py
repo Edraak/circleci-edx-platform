@@ -2,6 +2,7 @@
 Tests related to the basic footer-switching based off SITE_NAME to ensure
 edx.org uses an edx footer but other instances use an Open edX footer.
 """
+import unittest
 
 from nose.plugins.attrib import attr
 
@@ -54,7 +55,9 @@ class TestFooter(TestCase):
         """
         resp = self.client.get('/')
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'footer-openedx')
+
+        # TODO: Edraak: Temporarily disabled till eucalyptus release, check `footer.html` for more info.
+        # self.assertContains(resp, 'footer-openedx')
 
     @with_is_edx_domain(True)
     @override_settings(

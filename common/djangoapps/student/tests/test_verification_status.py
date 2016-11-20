@@ -310,7 +310,7 @@ class TestCourseVerificationStatus(UrlResetMixin, ModuleStoreTestCase):
         VERIFY_STATUS_NEED_TO_VERIFY: "verified",
         VERIFY_STATUS_SUBMITTED: "verified",
         VERIFY_STATUS_APPROVED: "verified",
-        VERIFY_STATUS_MISSED_DEADLINE: "audit",
+        VERIFY_STATUS_MISSED_DEADLINE: "honor",  # Edraak: Fix our hardcoded `honor` mode.
         VERIFY_STATUS_NEED_TO_REVERIFY: "audit"
     }
 

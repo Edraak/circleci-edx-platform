@@ -761,6 +761,7 @@ class EnrollInCourseTest(EnrollmentEventTestMixin, TestCase):
         self.assertTrue(CourseEnrollment.is_enrolled(user, course_id))
         self.assert_enrollment_event_was_emitted(user, course_id)
 
+    @unittest.skipIf(CourseMode.DEFAULT_MODE_SLUG == 'honor', 'Fix hardcoded `honor` code for Edraak')
     def test_change_enrollment_modes(self):
         user = User.objects.create(username="justin", email="jh@fake.edx.org")
         course_id = SlashSeparatedCourseKey("edX", "Test101", "2013")

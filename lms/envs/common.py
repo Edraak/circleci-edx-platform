@@ -1133,6 +1133,7 @@ MIDDLEWARE_CLASSES = (
     'splash.middleware.SplashMiddleware',
 
     # Make Arabic language the default one
+    # TODO: These are removed in tests, make them less intrusive so we can get it back!
     'edraak_i18n.middleware.ForceLangMiddleware',
     'edraak_i18n.middleware.SessionBasedLocaleMiddleware',
 

@@ -244,6 +244,17 @@ CACHES = {
 # Dummy secret key for dev
 SECRET_KEY = '85920908f28904ed733fe576320db18cabd7b6cd'
 
+EDRAAK_DISABLED_MIDDLEWARES_ON_TEST = (
+    'edraak_i18n.middleware.ForceLangMiddleware',
+    'edraak_i18n.middleware.SessionBasedLocaleMiddleware',
+)
+
+if EDRAAK_SKIP_UNWANTED_TESTS:
+    MIDDLEWARE_CLASSES = tuple(
+        cls for cls in MIDDLEWARE_CLASSES
+        if cls not in EDRAAK_DISABLED_MIDDLEWARES_ON_TEST
+    )
+
 # hide ratelimit warnings while running tests
 filterwarnings('ignore', message='No request passed to the backend, unable to rate-limit')
 

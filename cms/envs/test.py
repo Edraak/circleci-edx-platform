@@ -34,6 +34,7 @@ from lms.envs.test import (
     MEDIA_ROOT,
     MEDIA_URL,
     EDRAAK_SKIP_UNWANTED_TESTS,
+    EDRAAK_DISABLED_MIDDLEWARES_ON_TEST,
 )
 
 # mongo connection settings
@@ -129,6 +130,12 @@ DATABASES = {
         'ATOMIC_REQUESTS': True,
     },
 }
+
+if EDRAAK_SKIP_UNWANTED_TESTS:
+    MIDDLEWARE_CLASSES = tuple(
+        cls for cls in MIDDLEWARE_CLASSES
+        if cls not in EDRAAK_DISABLED_MIDDLEWARES_ON_TEST
+    )
 
 # This hack disables migrations during tests. We want to create tables directly from the models for speed.
 # See https://groups.google.com/d/msg/django-developers/PWPj3etj3-U/kCl6pMsQYYoJ.

@@ -80,6 +80,10 @@ FEATURES['ENABLE_COMBINED_LOGIN_REGISTRATION'] = True
 # Need wiki for courseware views to work. TODO (vshnayder): shouldn't need it.
 WIKI_ENABLED = True
 
+# Disable some tests because it doesn't match Edraak's requirements.
+# TODO: Fix the tests, or move closer to edX.
+EDRAAK_SKIP_UNWANTED_TESTS = True
+
 # Enable a parental consent age limit for testing
 PARENTAL_CONSENT_AGE_LIMIT = 13
 

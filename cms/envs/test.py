@@ -33,6 +33,7 @@ from lms.envs.test import (
     DEFAULT_FILE_STORAGE,
     MEDIA_ROOT,
     MEDIA_URL,
+    EDRAAK_SKIP_UNWANTED_TESTS,
 )
 
 # mongo connection settings

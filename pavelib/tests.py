@@ -166,6 +166,54 @@ def test_system(options):
 
 
 @task
+@cmdopts([
+    ("class_path=", "c", "Test class path"),
+    make_option("-v", "--verbosity", action="count", dest="verbosity", default=1),
+])
+def test_class(options):
+    """
+    A utility to test a single class.
+
+    This task is useful for debugging tests from CircleCI.
+
+    $ paver test_class -c lms.djangoapps.course_api.tests.test_serializers.TestCourseDetailSerializer
+    $ paver test_class -c util.tests.test_submit_feedback.SubmitFeedbackTest
+    """
+    class_path = getattr(options, 'class_path', None)
+
+    if not class_path:
+        raise Exception('The parameter `class_path` is not provided.')
+
+    dotted_path, test_class_path = class_path.rsplit('.', 1)
+
+    python_path = dotted_path.replace('.', '/') + '.py'
+
+    def guess_the_path(partial):
+        prefixes = [
+            'lms/djangoapps/',
+            'openedx/core/djangoapps/',
+            'common/djangoapps/',
+            'cms/djangoapps/',
+        ]
+
+        for prefix in prefixes:
+            full = prefix + partial
+
+            if os.path.exists(full):
+                return full
+
+        return partial  # Deal with it!
+
+    test_id = guess_the_path(python_path) + ':' + test_class_path
+
+    print 'test_id:', test_id
+
+    options.test_id = test_id
+
+    test_system(options)
+
+
+@task
 @needs(
     'pavelib.prereqs.install_prereqs',
     'pavelib.utils.test.utils.clean_reports_dir',

@@ -373,7 +373,8 @@ def get_course_syllabus_section(course, section_key):
     raise KeyError("Invalid about key " + str(section_key))
 
 
-def get_courses(user, org=None, filter_=None):
+# TODO: Edraak: Remove the domain keywords, or get the tests of https://github.com/Edraak/edx-platform/pull/181
+def get_courses(user, org=None, filter_=None, domain=None):
     """
     Returns a list of courses available, sorted by course.number and optionally
     filtered by org code (case-insensitive).

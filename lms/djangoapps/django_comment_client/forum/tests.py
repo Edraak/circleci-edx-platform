@@ -1,10 +1,7 @@
 import json
 import logging
 
-import unittest
-
 import ddt
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test.client import Client, RequestFactory
@@ -1252,8 +1249,6 @@ class CommentsServiceRequestHeadersTestCase(UrlResetMixin, ModuleStoreTestCase):
         for actual in mock_request.call_args_list:
             self.assertEqual(expected, actual)
 
-    # TODO: Edraak: Provide a better fix than `ForceLangMiddleware`, or fix that test
-    @unittest.skipIf('edraak_i18n.middleware.ForceLangMiddleware' in settings.MIDDLEWARE_CLASSES, 'Edraak stuff')
     def test_accept_language(self, mock_request):
         lang = "eo"
         text = "dummy content"

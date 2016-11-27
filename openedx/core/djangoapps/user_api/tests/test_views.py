@@ -1331,6 +1331,7 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, ApiTestCase):
             "name",
             "username",
             "password",
+            "is_third_party_auth",
             "city",
             "country",
             "gender",

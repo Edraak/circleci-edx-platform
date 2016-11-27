@@ -352,6 +352,49 @@ GIT_REPO_DIR = TEST_ROOT / "course_repos"
 CELERY_ALWAYS_EAGER = True
 CELERY_RESULT_BACKEND = 'djcelery.backends.cache:CacheBackend'
 
+######################### Django Countries ###############################
+
+# Keep in sync with the LMS settings so the tests run well.
+
+# Settings for django-countries
+# Country code overrides
+COUNTRIES_OVERRIDE = {
+    # Taiwan is specifically not translated to avoid it being translated as "Taiwan (Province of China)"
+    # "TW": "Taiwan",   # Edraak: We are not overriding Taiwan anymore, because we want it to be translated
+    "IL": None,
+    "EH": None,
+}
+
+# Show the Arabic countries first
+COUNTRIES_FIRST = [
+    'DZ',
+    'BH',
+    'KM',
+    'DJ',
+    'EG',
+    'IQ',
+    'JO',
+    'KW',
+    'LB',
+    'LY',
+    'MR',
+    'MA',
+    'OM',
+    'PS',
+    'QA',
+    'SA',
+    'SO',
+    'SD',
+    'SY',
+    'TN',
+    'AE',
+    'YE',
+]
+
+COUNTRIES_FIRST_SORT = True  # Since the order depends on the name after translation
+
+COUNTRIES_FIRST_BREAK = '--'
+
 ######################### MARKETING SITE ###############################
 
 MKTG_URL_LINK_MAP = {

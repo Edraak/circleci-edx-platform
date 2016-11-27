@@ -11,6 +11,7 @@ dependencies:
   pre:
     - sudo apt-get update
     - sudo apt-get install libxmlsec1 libxmlsec1-dev -yy
+    - sudo apt-get install lynx -yy
   override:
     - npm install
 

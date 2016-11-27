@@ -343,7 +343,7 @@ class TestCreateAccountValidation(TestCase):
         assert_username_error("Username cannot be more than 30 characters long")
 
         # Invalid
-        params["username"] = "invalid username"
+        params["username"] = "**invalid username**"  # Edraak: Spaces are allowed at Edraak
         assert_username_error("Usernames must contain only letters, numbers, underscores (_), and hyphens (-).")
 
     def test_email(self):

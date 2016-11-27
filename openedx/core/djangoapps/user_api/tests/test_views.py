@@ -1064,7 +1064,7 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, ApiTestCase):
                     {"value": "", "name": "--", "default": True},
                     {"value": "m", "name": "Male"},
                     {"value": "f", "name": "Female"},
-                    {"value": "o", "name": "Other/Prefer Not to Say"},
+                    # {"value": "o", "name": "Other/Prefer Not to Say"},  # Edraak: Removed
                 ],
             }
         )
@@ -1084,7 +1084,7 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, ApiTestCase):
                     {"value": "", "name": "--", "default": True},
                     {"value": "m", "name": "Male TRANSLATED"},
                     {"value": "f", "name": "Female TRANSLATED"},
-                    {"value": "o", "name": "Other/Prefer Not to Say TRANSLATED"},
+                    # {"value": "o", "name": "Other/Prefer Not to Say TRANSLATED"},  # Edraak: Removed
                 ],
             }
         )
@@ -1170,7 +1170,7 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, ApiTestCase):
     )
     @mock.patch.dict(settings.FEATURES, {"ENABLE_MKTG_SITE": True})
     def test_registration_honor_code_mktg_site_enabled(self):
-        link_html = '<a href=\"https://www.test.com/honor\">Terms of Service and Honor Code</a>'
+        link_html = '<a href=\"https://www.test.com/honor\" target=\"_blank\">Terms of Service and Honor Code</a>'
         self._assert_reg_field(
             {"honor_code": "required"},
             {

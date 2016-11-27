@@ -168,6 +168,7 @@ def test_system(options):
 @task
 @cmdopts([
     ("class_path=", "c", "Test class path"),
+    ("method=", "m", "Test a specific method"),
     make_option("-v", "--verbosity", action="count", dest="verbosity", default=1),
 ])
 def test_class(options):
@@ -180,6 +181,7 @@ def test_class(options):
     $ paver test_class -c util.tests.test_submit_feedback.SubmitFeedbackTest
     """
     class_path = getattr(options, 'class_path', None)
+    method = getattr(options, 'method', None)
 
     if not class_path:
         raise Exception('The parameter `class_path` is not provided.')
@@ -205,6 +207,9 @@ def test_class(options):
         return partial  # Deal with it!
 
     test_id = guess_the_path(python_path) + ':' + test_class_path
+
+    if method:
+        test_id += '.{}'.format(method)
 
     print 'test_id:', test_id
 

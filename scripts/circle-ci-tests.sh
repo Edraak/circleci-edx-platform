@@ -28,8 +28,9 @@ set -o pipefail
 # There is no need to install the prereqs, as this was already
 # just done via the dependencies override section of circle.yml.
 export NO_PREREQ_INSTALL='true'
-
+NUMBER_OF_BOKCHOY_THREADS=1
 EXIT=0
+
 
 if [ "$CIRCLE_NODE_TOTAL" == "1" ] ; then
     echo "Only 1 container is being used to run the tests."
@@ -93,3 +94,7 @@ else
             ;;
     esac
 fi
+
+cp -R $HOME/firefox/ firefox/
+export SELENIUM_FIREFOX_PATH=firefox/firefox
+paver test_bokchoy -n $NUMBER_OF_BOKCHOY_THREADS --with-flaky --with-xunit

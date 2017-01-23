@@ -95,6 +95,6 @@ EXIT=0
 #    esac
 #fi
 
-cp -R $HOME/firefox/ firefox/
-export SELENIUM_FIREFOX_PATH=firefox/firefox
+#cp -R $HOME/firefox/ firefox/
+#export SELENIUM_FIREFOX_PATH=firefox/firefox
 paver test_bokchoy -n $NUMBER_OF_BOKCHOY_THREADS --with-flaky --with-xunit

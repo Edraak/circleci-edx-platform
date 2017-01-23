@@ -6,6 +6,8 @@ machine:
     - sudo apt-get install memcached
   python:
     version: 2.7.10
+  services:
+    - memcached
 
 
 general:

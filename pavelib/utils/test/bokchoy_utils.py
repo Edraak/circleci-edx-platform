@@ -122,6 +122,7 @@ def is_memcache_running():
     """
     # Attempt to set a key in memcache. If we cannot do so because the
     # service is not available, then this will return False.
+    print Env.BOK_CHOY_CACHE.set('test', 'test')
     return Env.BOK_CHOY_CACHE.set('test', 'test')
 
 

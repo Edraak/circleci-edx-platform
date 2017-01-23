@@ -4,7 +4,6 @@ machine:
     - sudo apt-get install libxmlsec1 libxmlsec1-dev -yy
     - sudo apt-get install lynx -yy
     - sudo apt-get install memcached
-    - ps aux | grep memcached
   python:
     version: 2.7.10
 

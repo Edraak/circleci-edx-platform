@@ -43,7 +43,7 @@ for db in "${database_order[@]}"; do
     # or a jenkins worker environment) that already ran tests on another commit that had
     # different migrations that created, dropped, or altered tables.
     echo "Issuing a reset_db command to the $db bok_choy MySQL database."
-    ./manage.py lms --settings bok_choy reset_db --traceback --noinput --router $db
+#    ./manage.py lms --settings bok_choy reset_db --traceback --noinput --router $db
 
     # If there are cached database schemas/data, load them
     if [[ ! -f $DB_CACHE_DIR/bok_choy_schema_$db.sql || ! -f $DB_CACHE_DIR/bok_choy_data_$db.json || ! -f $DB_CACHE_DIR/bok_choy_migrations_data_$db.sql ]]; then

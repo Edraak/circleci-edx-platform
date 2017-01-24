@@ -18,7 +18,7 @@ general:
 dependencies:
   override:
     - npm install
-
+    - npm -g install phantomjs-prebuilt
     - pip install setuptools
     - pip install --exists-action w -r requirements/edx/paver.txt
 

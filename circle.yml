@@ -50,9 +50,6 @@ dependencies:
     - pip freeze
 test:
   pre:
-    - sudo mkdir -p /edx/app/edxapp/log
-    - sudo mkdir -p /edx/var/edxapp/data
-    - sudo mkdir -p /edx/app/edxapp/uploads
     - tox -e $TOX_ENV
 
   override:

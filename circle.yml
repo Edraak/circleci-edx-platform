@@ -4,6 +4,28 @@ machine:
     - sudo apt-get install libxmlsec1 libxmlsec1-dev -yy
     - sudo apt-get install lynx -yy
     - sudo apt-get install memcached
+    - sudo apt-get install xvfb
+    - sudo pip install pyvirtualdisplay
+  environment:
+    TOX_ENV: py27-django17
+    TOX_ENV: py27-django18
+    TOX_ENV: py27-django19
+    TOX_ENV: py27-django110
+    TOX_ENV: py33-django17
+    TOX_ENV: py33-django18
+    TOX_ENV: py34-django17
+    TOX_ENV: py34-django18
+    TOX_ENV: py34-django19
+    TOX_ENV: py34-django110
+    TOX_ENV: py35-django18
+    TOX_ENV: py35-django19
+    TOX_ENV: py35-django110
+    TOX_ENV: pypy-django17
+    TOX_ENV: pypy-django18
+    TOX_ENV: pypy-django19
+    TOX_ENV: pypy-django110
+    TOX_ENV: docs
+    TOX_ENV: analyze
   python:
     version: 2.7.10
   services:
@@ -38,18 +60,19 @@ dependencies:
     - pip install --exists-action w -r requirements/edx/base.txt
     - pip install --exists-action w -r requirements/edx/paver.txt
     - if [ -e requirements/edx/post.txt ]; then pip install --exists-action w -r requirements/edx/post.txt ; fi
-
-    - pip install coveralls==1.0
+    - pip install --exists-action w -r  requirements/tox.txt
+    - pip install coveralls==1.1
 
     # Output the installed python packages to the console to help
     # with troubleshooting any issues with python requirements.
     - pip freeze
-
 test:
   pre:
-    - mkdir -p /edx/app/edxapp/log
-    - mkdir -p /edx/var/edxapp/data
-    - mkdir -p /edx/app/edxapp/uploads
+    - sudo mkdir -p /edx/app/edxapp/log
+    - sudo mkdir -p /edx/var/edxapp/data
+    - sudo mkdir -p /edx/app/edxapp/uploads
+    - tox -e $TOX_ENV
+
   override:
     # Run tests for the system.
     # all-tests.sh is the entry point for determining

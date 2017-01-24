@@ -1,0 +1,21 @@
+# Packages needed in order to run tox.
+# Installed by Jenkins and dev environments.
+
+# Indirect dependencies first, exact versions for consistency
+
+# detox -> eventlet
+greenlet==0.4.10
+
+# detox -> tox
+pluggy==0.4.0
+py==1.4.31
+virtualenv==15.1.0
+
+# detox
+eventlet==0.19.0
+tox==2.5.0
+
+# And now the direct dependencies
+
+# For managing test environments and running them in parallel
+detox==0.10.0

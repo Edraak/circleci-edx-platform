@@ -95,12 +95,6 @@ EXIT=0
 #    esac
 #fi
 
-export SELENIUM_BROWSER=firefox
-export SELENIUM_VERSION=28.0
-export SELENIUM_PLATFORM="OS X 10.9"
-export SELENIUM_PORT=80
-export SELENIUM_HOST=$SAUCE_USER_NAME:$SAUCE_API_KEY@ondemand.saucelabs.com
-
 #cp -R $HOME/firefox/ firefox/
 #export SELENIUM_FIREFOX_PATH=firefox/firefox
 paver test_bokchoy --attr='shard_1' -n $NUMBER_OF_BOKCHOY_THREADS --with-flaky --with-xunit -t lms/test_lms:CourseWikiTest.test_edit_course_wiki

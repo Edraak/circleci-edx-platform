@@ -96,7 +96,7 @@ EXIT=0
 #fi
 
 echo $DISPLAY
-export SELENIUM_BROWSER=chrome
+export SELENIUM_BROWSER=firefox
 export DISPLAY=":1"
 
 #cp -R $HOME/firefox/ firefox/

@@ -99,6 +99,7 @@ echo $DISPLAY
 export SELENIUM_BROWSER=firefox
 export DISPLAY=":1"
 
+echo $HOME
 #cp -R $HOME/firefox/ firefox/
 #export SELENIUM_FIREFOX_PATH=firefox/firefox
 paver test_bokchoy --attr='shard_1' -n $NUMBER_OF_BOKCHOY_THREADS --with-flaky --with-xunit -t lms/test_lms.py:CourseWikiTest.test_edit_course_wiki

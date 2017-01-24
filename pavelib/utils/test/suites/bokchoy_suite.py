@@ -152,7 +152,6 @@ class BokChoyTestSuite(TestSuite):
         Sets up and starts servers for a Bok Choy run. If --fasttest is not
         specified then static assets are collected
         """
-        print 'Salah2', settings.LOGGING_CONFIG, settings.LOGGING
 
         sh("{}/scripts/reset-test-db.sh".format(Env.REPO_ROOT))
 

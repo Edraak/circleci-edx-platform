@@ -47,6 +47,10 @@ dependencies:
     - pip freeze
 
 test:
+  pre:
+    - mkdir -p /edx/app/edxapp/log
+    - mkdir -p /edx/var/edxapp/data
+    - mkdir -p /edx/app/edxapp/uploads
   override:
     # Run tests for the system.
     # all-tests.sh is the entry point for determining

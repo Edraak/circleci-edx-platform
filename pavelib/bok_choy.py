@@ -103,7 +103,6 @@ def test_bokchoy(options, passthrough_options):
     """
     # Note: Bok Choy uses firefox if SELENIUM_BROWSER is not set. So we are using
     # firefox as the default here.
-    print 'Salah1', settings.LOGGING_CONFIG, settings.LOGGING
 
     using_firefox = (os.environ.get('SELENIUM_BROWSER', 'firefox') == 'firefox')
     validate_firefox = getattr(options, 'validate_firefox_version', using_firefox)

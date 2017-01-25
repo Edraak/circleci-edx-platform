@@ -1,6 +1,6 @@
 machine:
-#  pre:
-#    - sudo apt-get update
+  pre:
+    - sudo apt-get update
 #    - sudo apt-get install libxmlsec1 libxmlsec1-dev -yy
 #    - sudo apt-get install lynx -yy
 #    - sudo apt-get install memcached
@@ -8,8 +8,8 @@ machine:
 #    - sudo pip install pyvirtualdisplay
 #  environment:
 #    TOX_ENV: py27
-#  python:
-#    version: 2.7.10
+  python:
+    version: 2.7.10
 #  services:
 #    - memcached
 

@@ -53,19 +53,19 @@ dependencies:
     - tar -xzf sc-latest-linux.tar.gz
 test:
   override:
-    - pwd sc-*-linux
-    - cd sc-*-linux && ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready
+#    - pwd sc-*-linux
+#    - cd sc-*-linux && ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready
     # Wait for tunnel to be ready
-    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
+#    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
     # Run tests for the system.
     # all-tests.sh is the entry point for determining
     # which tests to run.
     # See the circleCI documentation regarding parallelism
     # to understand how multiple containers can be used to
     # run subsets of tests in parallel.
-#    - ./scripts/all-tests.sh:
-#        timeout: 900  # if a command runs this many seconds without output, kill it
-#        parallel: true
+    - ./scripts/all-tests.sh:
+        timeout: 900  # if a command runs this many seconds without output, kill it
+        parallel: true
 
   post:
 #    - mkdir -p $CIRCLE_TEST_REPORTS/junit

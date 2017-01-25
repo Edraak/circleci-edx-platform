@@ -54,9 +54,10 @@ dependencies:
 test:
   override:
     - pwd sc-*-linux
-    - cd sc-*-linux && ./bin/sc -u $SAUCE_USER_NAME -k $SAUCE_API_KEY -f ~/sc_ready
+    - cd sc-*-linux && ./bin/sc -u $SAUCE_USER_NAME -k $SAUCE_API_KEY -f ~/sc_ready:
+        background: true
     # Wait for tunnel to be ready
-    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
+    - while [ ! -e ~/sc_ready ]; do sleep 1; done
     # Run tests for the system.
     # all-tests.sh is the entry point for determining
     # which tests to run.

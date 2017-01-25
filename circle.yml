@@ -48,11 +48,19 @@ dependencies:
     # Output the installed python packages to the console to help
     # with troubleshooting any issues with python requirements.
     - pip freeze
+  post:
+    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
+    - tar -xzf sc-latest-linux.tar.gz
 test:
   pre:
     - tox -e $TOX_ENV
 
   override:
+    - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready:
+        background: true
+        pwd: sc-*-linux
+    # Wait for tunnel to be ready
+    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
     # Run tests for the system.
     # all-tests.sh is the entry point for determining
     # which tests to run.
@@ -73,7 +81,7 @@ test:
     # the build so that all results are consolidated.
     - "if [ $(find reports -type f | wc -l) -gt 0 ] ; then cp -r reports/. $CIRCLE_TEST_REPORTS/junit ; fi":
         parallel: true
-
+    - killall --wait sc  # wait for Sauce Connect to close the tunnel
     # If you have enabled coveralls for your repo, configure your COVERALLS_REPO_TOKEN
     # as an Environment Variable in the Project Settings on CircleCI, and coverage
     # data will automatically be sent to coveralls. See https://coveralls.io/

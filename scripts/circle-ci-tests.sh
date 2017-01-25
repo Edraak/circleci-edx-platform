@@ -103,11 +103,11 @@ export SELENIUM_HOST=$SAUCE_USER_NAME:$SAUCE_API_KEY@ondemand.saucelabs.com
 #echo $DISPLAY
 #export SELENIUM_BROWSER=firefox
 #export DISPLAY=":1"
-#echo $SAUCE_USERNAME
-#pwd sc-*-linux
+
 #cd sc-*-linux && ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready
 #while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
 #echo $HOME
 #cp -R $HOME/firefox/ firefox/
 #export SELENIUM_FIREFOX_PATH=firefox/firefox
+
 paver test_bokchoy --attr='shard_1' -n $NUMBER_OF_BOKCHOY_THREADS --with-flaky --with-xunit -t lms/test_lms.py:CourseWikiTest.test_edit_course_wiki
